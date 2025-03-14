@@ -7,22 +7,41 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require('dotenv').config();
 
+/**
+ * custom modules 
+ */
+const login = require('./src/routes/login.route');
+
+
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 
 /**
- *  Login page 
+ * Template Engine (EJS) setup
  */
-app.get('/login', (req, res) => {
-    res.status(200).send("Welcome to the login page!");
-});
+
+app.set('view engine', 'ejs');
+
+// static files will server from this location 
+app.use(express.static(`${__dirname}/public`));
+
+
+/**
+ * Enable cors and cookie parser 
+ */
+app.use(cors()).use(cookieParser());
 
 
 app.get('/', (req, res) => {
-    res.status(200).send("Welcome to the login page!")
+    res.status(200).send("Welcome to the home page!!");
 });
+
+/**
+ *  Login page 
+ */
+app.use('/login', login);
 
 
 const runServer = () => {
@@ -33,7 +52,7 @@ const runServer = () => {
         });
     }
     catch (err) {
-
+        res.status(404).send(err);
     }
 };
 
